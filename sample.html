@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Animal Health Care Management System">
+
+    <title>AnimalCare | Health Care Management System</title>
+
+    <style>
+
+        /* =========================
+           BASIC SETTINGS
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f9f7;
+            color: #263238;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+
+            background: #123b35;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+        }
+
+        .navbar {
+            height: 75px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #39d9a5;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #39d9a5;
+        }
+
+        .login-btn {
+            background: #39b98a;
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+
+        .login-btn:hover {
+            background: #2da278;
+            color: white !important;
+        }
+
+
+        /* =========================
+           HERO SECTION
+        ========================= */
+
+        .hero {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+
+            background:
+                linear-gradient(
+                    rgba(10, 50, 43, 0.82),
+                    rgba(10, 50, 43, 0.55)
+                ),
+                url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1800&q=85");
+
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            color: white;
+            padding-top: 70px;
+        }
+
+        .tag {
+            display: inline-block;
+
+            padding: 7px 16px;
+            border-radius: 20px;
+
+            background: rgba(57, 217, 165, 0.18);
+            border: 1px solid #39d9a5;
+
+            color: #70eac3;
+
+            font-size: 13px;
+            font-weight: bold;
+
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(45px, 7vw, 75px);
+            line-height: 1.05;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #39d9a5;
+        }
+
+        .hero p {
+            color: #e1eeeb;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .primary-btn {
+            background: #39b98a;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #2b9d76;
+            transform: translateY(-3px);
+        }
+
+        .secondary-btn {
+            border: 1px solid white;
+            color: white;
+        }
+
+        .secondary-btn:hover {
+            background: white;
+            color: #123b35;
+        }
+
+
+        /* =========================
+           COMMON SECTIONS
+        ========================= */
+
+        section {
+            padding: 90px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title small {
+            color: #22a77b;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-title h2 {
+            font-size: 40px;
+            margin: 8px 0;
+        }
+
+        .section-title p {
+            color: #667;
+            max-width: 650px;
+            margin: auto;
+        }
+
+
+        /* =========================
+           SERVICES
+        ========================= */
+
+        #services {
+            background: white;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e8e5;
+            border-radius: 15px;
+            overflow: hidden;
+
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-content h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #123b35;
+        }
+
+        .card-content p {
+            color: #667;
+            margin-bottom: 15px;
+        }
+
+        .learn-more {
+            color: #1ca276;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           FEATURES
+        ========================= */
+
+        #features {
+            background: #eef7f4;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .feature {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 15px;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            margin-bottom: 8px;
+            color: #123b35;
+        }
+
+        .feature p {
+            color: #667;
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           ABOUT
+        ========================= */
+
+        #about {
+            background: #123b35;
+            color: white;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .about-content small {
+            color: #39d9a5;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .about-content h2 {
+            font-size: 40px;
+            margin: 10px 0 20px;
+        }
+
+        .about-content p {
+            color: #c7d9d5;
+            margin-bottom: 15px;
+        }
+
+        .about-list {
+            margin-top: 25px;
+            list-style: none;
+        }
+
+        .about-list li {
+            margin-bottom: 12px;
+        }
+
+        .about-list li::before {
+            content: "✓";
+            color: #39d9a5;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+
+        /* =========================
+           MANAGEMENT SECTION
+        ========================= */
+
+        #management {
+            background: white;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .management-card {
+            padding: 30px;
+            background: #f7fbf9;
+            border-left: 5px solid #25ad80;
+            border-radius: 10px;
+        }
+
+        .management-card h3 {
+            margin-bottom: 10px;
+            color: #123b35;
+        }
+
+        .management-card p {
+            color: #667;
+        }
+
+
+        /* =========================
+           APPOINTMENT
+        ========================= */
+
+        #appointment {
+            background: #eef7f4;
+        }
+
+        .appointment-box {
+            max-width: 800px;
+            margin: auto;
+
+            background: white;
+            padding: 40px;
+
+            border-radius: 15px;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 13px;
+
+            border: 1px solid #d5e0dc;
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .submit-btn {
+            border: none;
+            cursor: pointer;
+            background: #25ad80;
+            color: white;
+            padding: 13px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background: #198d66;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #0b2824;
+            color: #a9bfba;
+            padding: 50px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .footer-logo span {
+            color: #39d9a5;
+        }
+
+        footer h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        footer a {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        footer a:hover {
+            color: #39d9a5;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #23443f;
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           RESPONSIVE DESIGN
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .management-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                height: auto;
+                padding: 15px 0;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .hero h1 {
+                font-size: 45px;
+            }
+
+            .cards,
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title h2 {
+                font-size: 32px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
+    <header>
+
+        <div class="container navbar">
+
+            <a href="#home" class="logo">
+                Animal<span>Care.</span>
+            </a>
+
+            <nav>
+
+                <ul class="nav-links">
+
+                    <li>
+                        <a href="#home">Home</a>
+                    </li>
+
+                    <li>
+                        <a href="#services">Services</a>
+                    </li>
+
+                    <li>
+                        <a href="#animals">Animals</a>
+                    </li>
+
+                    <li>
+                        <a href="#appointment">Appointment</a>
+                    </li>
+
+                    <li>
+                        <a href="#about">About</a>
+                    </li>
+
+                    <li>
+                        <a href="#login" class="login-btn">
+                            Login
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         HOME
+    ========================= -->
+
+    <main>
+
+        <section class="hero" id="home">
+
+            <div class="container">
+
+                <div class="hero-content">
+
+                    <span class="tag">
+                        ANIMAL HEALTH CARE MANAGEMENT SYSTEM
+                    </span>
+
+                    <h1>
+                        Complete Care for
+                        <span>Every Animal.</span>
+                    </h1>
+
+                    <p>
+                        Manage animal information, health records,
+                        veterinary appointments, treatments, and
+                        vaccination details in one simple system.
+                    </p>
+
+                    <div class="buttons">
+
+                        <a href="#appointment"
+                           class="btn primary-btn">
+                            Book Appointment
+                        </a>
+
+                        <a href="#services"
+                           class="btn secondary-btn">
+                            Explore Services
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SERVICES
+        ========================= -->
+
+        <section id="services">
+
+            <div class="container">
+
+                <div class="section-title">
+
+                    <small>Our Services</small>
+
+                    <h2>
+                        Animal Health Services
+                    </h2>
+
+                    <p>
+                        Manage important animal healthcare
+                        activities from one place.
+                    </p>
+
+                </div>
+
+
+                <div class="cards">
+
+
+                    <div class="card">
+
+                        <img
+                            src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=800&q=80"
+                            alt="Veterinary examination"
+                        >
+
+                        <div class="card-content">
+
+                            <h3>
+                                Veterinary Care
+                            </h3>
+
+                            <p>
+                                Record veterinary visits,
+                                examinations, treatments,
+                                and medical information.
+                            </p>
+
+                            <a href="#" class="learn-more">
+                                View Details →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <img
+                            src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80"
+                            alt="Animal vaccination"
+                        >
+
+                        <div class="card-content">
+
+                            <h3>
+                                Vaccination Management
+                            </h3>
+
+                            <p>
+                                Maintain vaccination records
+                                and keep track of upcoming
+                                vaccination dates.
+                            </p>
+
+                            <a href="#" class="learn-more">
+                                View Details →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <img
+                            src="https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=800&q=80"
+                            alt="Animal health monitoring"
+                        >
+
+                        <div class="card-content">
+
+                            <h3>
+                                Health Monitoring
+                            </h3>
+
+                            <p>
+                                Store and monitor animal health
+                                information, diseases, treatments,
+                                and medical history.
+                            </p>
+
+                            <a href="#" class="learn-more">
+                                View Details →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SYSTEM FEATURES
+        ========================= -->
+
+        <section id="features">
+
+            <div class="container">
+
+                <div class="section-title">
+
+                    <small>System Features</small>
+
+                    <h2>
+                        Everything in One System
+                    </h2>
+
+                    <p>
+                        Important features for managing
+                        animal healthcare efficiently.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-grid">
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            🐕
+                        </div>
+
+                        <h3>
+                            Animal Registration
+                        </h3>
+
+                        <p>
+                            Add and manage animal details,
+                            breed, age, and owner information.
+                        </p>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            📋
+                        </div>
+
+                        <h3>
+                            Health Records
+                        </h3>
+
+                        <p>
+                            Maintain medical history,
+                            diagnosis, and treatment records.
+                        </p>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            📅
+                        </div>
+
+                        <h3>
+                            Appointments
+                        </h3>
+
+                        <p>
+                            Book and manage appointments
+                            with veterinarians.
+                        </p>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            💉
+                        </div>
+
+                        <h3>
+                            Vaccination
+                        </h3>
+
+                        <p>
+                            Record vaccinations and
+                            upcoming vaccination dates.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ABOUT
+        ========================= -->
+
+        <section id="about">
+
+            <div class="container about-grid">
+
+
+                <div class="about-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1000&q=85"
+                        alt="Healthy dog"
+                    >
+
+                </div>
+
+
+                <div class="about-content">
+
+                    <small>
+                        ABOUT THE SYSTEM
+                    </small>
+
+                    <h2>
+                        Simple Animal Health Management
+                    </h2>
+
+                    <p>
+                        AnimalCare is designed to help animal
+                        owners and veterinary staff manage
+                        important animal healthcare information.
+                    </p>
+
+                    <p>
+                        The system brings animal registration,
+                        health records, appointments, treatments,
+                        and vaccination information together
+                        in one place.
+                    </p>
+
+
+                    <ul class="about-list">
+
+                        <li>
+                            Manage animal profiles
+                        </li>
+
+                        <li>
+                            Maintain medical records
+                        </li>
+
+                        <li>
+                            Schedule veterinary appointments
+                        </li>
+
+                        <li>
+                            Track vaccination details
+                        </li>
+
+                        <li>
+                            Manage treatment information
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             MANAGEMENT
+        ========================= -->
+
+        <section id="animals">
+
+            <div class="container">
+
+                <div class="section-title">
+
+                    <small>Management</small>
+
+                    <h2>
+                        Manage Animal Information
+                    </h2>
+
+                    <p>
+                        Keep all important information
+                        organized and easy to access.
+                    </p>
+
+                </div>
+
+
+                <div class="management-grid">
+
+
+                    <div class="management-card">
+
+                        <h3>
+                            🐾 Animal Details
+                        </h3>
+
+                        <p>
+                            Store animal name, type, breed,
+                            age, gender, and owner details.
+                        </p>
+
+                    </div>
+
+
+                    <div class="management-card">
+
+                        <h3>
+                            🩺 Medical Records
+                        </h3>
+
+                        <p>
+                            Store diagnosis, symptoms,
+                            treatments, and veterinary notes.
+                        </p>
+
+                    </div>
+
+
+                    <div class="management-card">
+
+                        <h3>
+                            💊 Treatment Records
+                        </h3>
+
+                        <p>
+                            Record medicines, treatments,
+                            dosage information, and follow-ups.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             APPOINTMENT
+        ========================= -->
+
+        <section id="appointment">
+
+            <div class="container">
+
+                <div class="section-title">
+
+                    <small>Veterinary Appointment</small>
+
+                    <h2>
+                        Book an Appointment
+                    </h2>
+
+                    <p>
+                        Schedule a veterinary visit for your animal.
+                    </p>
+
+                </div>
+
+
+                <div class="appointment-box">
+
+                    <form>
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Owner Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    placeholder="Enter owner name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Animal Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    placeholder="Enter animal name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Animal Type
+                                </label>
+
+                                <select required>
+
+                                    <option value="">
+                                        Select animal
+                                    </option>
+
+                                    <option>
+                                        Dog
+                                    </option>
+
+                                    <option>
+                                        Cat
+                                    </option>
+
+                                    <option>
+                                        Cow
+                                    </option>
+
+                                    <option>
+                                        Goat
+                                    </option>
+
+                                    <option>
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Appointment Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group full-width">
+
+                                <label>
+                                    Reason for Visit
+                                </label>
+
+                                <textarea
+                                    placeholder="Describe the reason for the appointment">
+                                </textarea>
+
+                            </div>
+
+
+                            <div class="full-width">
+
+                                <button
+                                    type="submit"
+                                    class="submit-btn">
+                                    Book Appointment
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        <div class="container">
+
+            <div class="footer-grid">
+
+
+                <div>
+
+                    <div class="footer-logo">
+                        Animal<span>Care.</span>
+                    </div>
+
+                    <p>
+                        Healthy Animals.
+                        Better Care.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Quick Links
+                    </h3>
+
+                    <a href="#home">
+                        Home
+                    </a>
+
+                    <a href="#services">
+                        Services
+                    </a>
+
+                    <a href="#animals">
+                        Animals
+                    </a>
+
+                    <a href="#appointment">
+                        Appointment
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Contact
+                    </h3>
+
+                    <a href="mailto:info@animalcare.com">
+                        info@animalcare.com
+                    </a>
+
+                    <a href="tel:+911234567890">
+                        +91 12345 67890
+                    </a>
+
+                    <p>
+                        Tamil Nadu, India
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="copyright">
+
+                © 2026 AnimalCare.
+                Animal Health Care Management System.
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+Member Registration - USER 1 can create an account and manage their profile with personal details and dance preferences.
+Class Scheduling - Display available dance classes with timings, instructors, and difficulty levels that USER 1 can view and enroll in.
+Attendance Tracking - USER 2 can mark attendance for each class session and track member participation.
+Membership Billing - Automated monthly or yearly membership fee management with payment status for USER 1.
+Instructor Dashboard - USER 2 can view class details, member lists, and manage class content and announcements.
+Performance Events - USER 1 can view upcoming dance events, recitals, or competitions and register to participate.
