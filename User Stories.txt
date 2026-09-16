@@ -1,0 +1,222 @@
+User Stories
+
+US-01: As a pet owner, I want to create an account, register my pet details (species, breed, age, and medical history), and manage my profile information, so that I can keep my personal and pet records updated in the clinic system.
+
+US-02: As a pet owner, I want to view doctor schedules, consultation types, and available time slots, so that I can select and book veterinary appointments.
+
+US-03: As a veterinary staff member, I want to record checkup details, update vaccination statuses, and log treatment histories for each session, so that the clinic maintains accurate medical records for each animal.
+
+US-04: As a pet owner, I want the system to calculate consultation, treatment, and medication fees and track payment status, so that I have visibility into my medical expenses and bill settlements.
+
+US-05: As a veterinary staff member, I want to access a dedicated dashboard displaying appointments, patient records, treatment plans, and health announcements, so that I can efficiently manage daily clinic workflows and patient care.
+
+US-06: As a pet owner, I want to browse upcoming pet health camps, vaccination drives, and wellness workshops and register for them, so that my pet can participate in community health and wellness events.
+Use Case 1
+
+ID: UC-01
+
+Name: Register Pet Owner Account & Pet Details
+
+Actor: Pet Owner
+
+Goal: Create a user account, add pet details (species, breed, age, medical history), and manage profile information.
+
+Pre-condition: The Pet Owner is on the system registration/profile management page.
+
+Main Flow:
+
+The Pet Owner enters account details and profile information.
+
+The Pet Owner enters pet details, including species, breed, age, and medical history.
+
+The system saves the user account and pet record.
+
+The system displays a confirmation that the profile and pet registration are complete.
+
+Alternative Flow:
+
+2a. The Pet Owner updates existing profile information or existing pet details.
+
+2b. The system saves the updated profile/pet information and confirms the update.
+
+Exception Flow:
+
+1a. The Pet Owner submits incomplete or invalid account/pet information.
+
+1b. The system displays an error message and prompts the user to correct the missing or invalid fields.
+
+Post-condition: The Pet Owner account and associated pet details are successfully stored in the database.
+
+Use Case 2
+
+ID: UC-02
+
+Name: Book Veterinary Appointment
+
+Actor: Pet Owner
+
+Goal: View doctor schedules, consultation types, and availability slots, and book an appointment.
+
+Pre-condition: The Pet Owner has a registered account and is logged in.
+
+Main Flow:
+
+The Pet Owner navigates to the appointment booking section.
+
+The system displays available veterinary doctors, consultation types, and open time slots.
+
+The Pet Owner selects a doctor, consultation type, and desired time slot.
+
+The Pet Owner confirms the booking request.
+
+The system records and confirms the appointment.
+
+Alternative Flow:
+
+3a. The Pet Owner filters or views different doctor schedules and consultation types before making a selection.
+
+Exception Flow:
+
+3a. The selected time slot becomes unavailable or invalid during selection.
+
+3b. The system notifies the user and prompts them to select a different available slot.
+
+Post-condition: The appointment is booked and stored in the clinic schedule.
+
+Use Case 3
+
+ID: UC-03
+
+Name: Record Medical Checkup & Vaccination Tracking
+
+Actor: Veterinary Staff
+
+Goal: Log medical checkup details, update vaccination status, and record treatment history for an animal session.
+
+Pre-condition: The Veterinary Staff member is logged into the system and an animal record exists.
+
+Main Flow:
+
+The Veterinary Staff accesses the patient record for the active session.
+
+The staff member inputs medical checkup details.
+
+The staff member updates the animal's vaccination status.
+
+The staff member logs the session treatment history.
+
+The system saves the medical checkup, vaccination, and treatment history entries.
+
+Alternative Flow:
+
+3a. The staff member updates an existing treatment history record or vaccination record.
+
+Exception Flow:
+
+2a. Required checkup or treatment details are missing during submission.
+
+2b. The system displays an error message and prevents saving until mandatory fields are entered.
+
+Post-condition: The animal's medical checkup, vaccination status, and treatment history are updated and saved.
+
+Use Case 4
+
+ID: UC-04
+
+Name: Manage Billing & Track Payment Status
+
+Actor: Pet Owner / Veterinary Staff
+
+Goal: Calculate consultation, treatment, and medication fees, and track payment status.
+
+Pre-condition: Treatment or consultation details for a session have been logged.
+
+Main Flow:
+
+The system calculates total fees based on consultation, treatment, and medication items.
+
+The system generates the fee breakdown and payment status for the Pet Owner.
+
+The Pet Owner views the fee details and current payment status.
+
+The payment status is recorded/updated (e.g., Paid / Pending).
+
+Alternative Flow:
+
+2a. Veterinary Staff views or updates the payment status directly for a pet owner's bill.
+
+Exception Flow:
+
+1a. Unrecorded or missing treatment/medication data prevents fee calculation.
+
+1b. The system flags the missing details and alerts the staff to complete treatment logs.
+
+Post-condition: The consultation, treatment, and medication fees are calculated, and the payment status is accurately stored.
+
+Use Case 5
+
+ID: UC-05
+
+Name: Veterinary Staff Dashboard Management
+
+Actor: Veterinary Staff
+
+Goal: Access a dashboard to view appointment details, manage patient records and treatment plans, and publish health announcements.
+
+Pre-condition: The Veterinary Staff member is logged into the system.
+
+Main Flow:
+
+The Veterinary Staff navigates to the staff dashboard.
+
+The system displays appointment details, patient records, treatment plans, and health announcements.
+
+The staff member selects an item to manage (view appointments, update patient records/treatment plans, or publish announcements).
+
+The system updates and saves the changes.
+
+Alternative Flow:
+
+3a. The staff member creates and publishes a new clinic health announcement to display on the platform.
+
+Exception Flow:
+
+3a. An invalid entry or empty announcement post is submitted.
+
+3b. The system notifies the staff member and prevents empty or invalid record updates.
+
+Post-condition: Dashboard records, treatment plans, or health announcements are successfully updated and displayed.
+
+Use Case 6
+
+ID: UC-06
+
+Name: Register for Pet Care & Wellness Events
+
+Actor: Pet Owner
+
+Goal: Browse upcoming pet health camps, vaccination drives, or wellness workshops and register to participate.
+
+Pre-condition: The Pet Owner is logged into the system and event details are published.
+
+Main Flow:
+
+The Pet Owner views the list of upcoming pet health camps, vaccination drives, and wellness workshops.
+
+The Pet Owner selects a specific event to attend.
+
+The Pet Owner submits a registration request for the event.
+
+The system registers the Pet Owner/pet for the selected event and displays a confirmation.
+
+Alternative Flow:
+
+1a. The Pet Owner browses event details without registering.
+
+Exception Flow:
+
+3a. Registration fails due to system processing error or invalid selection.
+
+3b. The system displays an error message prompting the user to try registering again.
+
+Post-condition: The Pet Owner is registered for the selected wellness event.

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetCare — Animal Health Care Management System</title>
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+</head>
+<body class="role-user">
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     LOGIN / AUTH OVERLAY
+════════════════════════════════════════════════════════════════════ -->
+<div class="login-overlay active" id="loginOverlay">
+    <div class="login-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="login-logo" style="font-size:2rem;">🐾</div>
+            <button type="button" class="btn btn-secondary btn-sm" id="loginLangBtn" onclick="toggleLanguage()" title="Change Language / மொழியை மாற்ற">🌐 <span id="loginLangText">English</span></button>
+        </div>
+        <div class="login-brand" style="margin-bottom:16px;">
+            <h1 data-i18n="brandName">VetCare</h1>
+            <p data-i18n="brandSub">விலங்கு நல்வாழ்வு மேலாண்மை அமைப்பு</p>
+        </div>
+
+        <div class="login-tabs">
+            <button type="button" class="login-tab active" id="roleTabOwner" onclick="switchLoginRole('owner')" data-i18n="tabOwner">🐾 செல்லப்பிராணி உரிமையாளர்</button>
+            <button type="button" class="login-tab" id="roleTabDoctor" onclick="switchLoginRole('doctor')" data-i18n="tabDoctor">🩺 மருத்துவர் / பணியாளர்</button>
+        </div>
+
+        <div id="loginFormSection">
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label data-i18n="emailLabel">மின்னஞ்சல் முகவரி</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="your@email.com" value="alice.johnson@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="passwordLabel">கடவுச்சொல்</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Your password" value="owner123" required>
+                </div>
+                <input type="hidden" id="loginRoleInput" value="owner">
+                <button type="submit" class="btn btn-primary btn-full" id="loginBtn" data-i18n="signInBtn">உள்நுழைக</button>
+            </form>
+            
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button type="button" class="btn btn-secondary btn-sm btn-full" onclick="quickLogin('owner')" title="1-Click Owner Login" data-i18n="quickOwner">⚡ 1-கிளிக் உரிமையாளர்</button>
+                <button type="button" class="btn btn-secondary btn-sm btn-full" onclick="quickLogin('doctor')" title="1-Click Doctor Login" data-i18n="quickDoctor">🩺 1-கிளிக் மருத்துவர்</button>
+            </div>
+            
+            <p class="login-hint" style="margin-top:12px;"><span data-i18n="demoText">டெமோ:</span> <strong id="loginDemoHint">alice.johnson@example.com / owner123</strong></p>
+            
+            <div id="serverStatusBadge" style="margin-top:10px; text-align:center; font-size:0.78rem; padding:6px 10px; border-radius:20px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px; background:var(--bg-hover); border:1px solid var(--border-color); color:var(--text-secondary);">
+                <span id="serverStatusDot" style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block;"></span>
+                <span id="serverStatusText">Detecting Backend Server…</span>
+            </div>
+
+            <div class="login-divider"><span data-i18n="orText">அல்லது</span></div>
+            <button type="button" class="btn btn-secondary btn-full" onclick="showRegisterPanel()" data-i18n="createAccount">✨ புதிய கணக்கு தொடங்க</button>
+        </div>
+
+        <div id="registerFormSection" style="display:none;">
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label data-i18n="regNameLabel">முழு பெயர் *</label>
+                    <input type="text" id="regName" class="form-control" placeholder="e.g. Alice Johnson" required minlength="2">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="regEmailLabel">மின்னஞ்சல் முகவரி *</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="alice@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="regPasswordLabel">கடவுச்சொல் * (குறைந்தது 4 எழுத்துகள்)</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Choose password" required minlength="4">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="regPhoneLabel">தொலைபேசி எண்</label>
+                    <input type="tel" id="regPhone" class="form-control" placeholder="+1 (555) 000-0000">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="regAddressLabel">வீட்டு முகவரி</label>
+                    <input type="text" id="regAddress" class="form-control" placeholder="e.g. 742 Evergreen Terrace">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" data-i18n="regSubmitBtn">🎉 கணக்கு தொடங்குக</button>
+            </form>
+            <button type="button" class="btn btn-secondary btn-full" style="margin-top:10px;" onclick="showLoginPanel()" data-i18n="backToLogin">← மீண்டும் உள்நுழைய</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SIDEBAR NAV
+════════════════════════════════════════════════════════════════════ -->
+<div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">🐾</div>
+            <div class="brand-info">
+                <h2>VetCare</h2>
+                <p>Clinic Management</p>
+            </div>
+        </div>
+
+        <!-- Role Portal Switcher -->
+        <div class="portal-switcher">
+            <button type="button" class="portal-btn active" id="portalUserBtn" onclick="confirmSwitchMode('user')" data-i18n="portalOwner">🐾 உரிமையாளர்</button>
+            <button type="button" class="portal-btn" id="portalDoctorBtn" onclick="confirmSwitchMode('doctor')" data-i18n="portalDoctor">🩺 மருத்துவர்</button>
+        </div>
+
+        <div class="portal-badge-wrap">
+            <span class="status-badge status-confirmed" id="portalModeBadge">🐾 செல்லப்பிராணி உரிமையாளர்</span>
+        </div>
+
+        <nav class="nav-menu">
+            <p class="nav-section-title" id="navSectionTitle">🐾 செல்லப்பிராணி உரிமையாளர் பட்டி</p>
+            <ul>
+                <!-- Doctor / Staff Only -->
+                <li data-role-access="doctor" style="display:none;">
+                    <a href="#" class="nav-link" data-target="dashboard">
+                        <span class="icon">📊</span>
+                        <span data-i18n="navDashboard">பணியாளர் கட்டுப்பாட்டறை</span>
+                    </a>
+                </li>
+                <!-- Common -->
+                <li>
+                    <a href="#" class="nav-link active" data-target="pets">
+                        <span class="icon">🐾</span>
+                        <span data-i18n="navPets">என் செல்லப்பிராணிகள்</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-target="appointments">
+                        <span class="icon">📅</span>
+                        <span data-i18n="navAppointments">முன்பதிவு செய்ய</span>
+                    </a>
+                </li>
+                <li data-role-access="doctor" style="display:none;">
+                    <a href="#" class="nav-link" data-target="health">
+                        <span class="icon">💉</span>
+                        <span data-i18n="navHealth">மருத்துவ பதிவுகள்</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-target="billing">
+                        <span class="icon">💳</span>
+                        <span data-i18n="navBilling">கட்டணம் & ரசீதுகள்</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-target="reports">
+                        <span class="icon">📈</span>
+                        <span data-i18n="navReports">அறிக்கைகள் & பகுப்பாய்வு</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-target="events">
+                        <span class="icon">🎪</span>
+                        <span data-i18n="navEvents">நலவாழ்வு முகாம்கள்</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-target="profile">
+                        <span class="icon">👤</span>
+                        <span data-i18n="navProfile">என் சுயவிவரம்</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user" id="sidebarUserProfile" title="View Profile">
+                <div class="sidebar-avatar" id="sidebarAvatarLetter">A</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebarUserName">Alice Johnson</div>
+                    <div class="sidebar-user-role" id="sidebarUserRole">செல்லப்பிராணி உரிமையாளர்</div>
+                </div>
+            </div>
+            <div class="sidebar-actions">
+                <button type="button" id="sidebarLangBtn" class="btn btn-icon" onclick="toggleLanguage()" title="Change Language / மொழியை மாற்ற" style="font-size:0.75rem;font-weight:700;padding:0 6px;width:auto;">
+                    <span id="sidebarLangText">English</span>
+                </button>
+                <button type="button" id="themeToggleBtn" class="btn btn-icon" title="Toggle Theme">
+                    <span id="themeToggleIcon">🌙</span>
+                </button>
+                <button type="button" class="btn btn-icon" onclick="performLogout()" title="Logout">🚪</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile Topbar -->
+    <div class="mobile-topbar">
+        <button type="button" class="btn btn-icon" id="mobileMenuToggle">☰</button>
+        <span class="mobile-brand">🐾 VetCare</span>
+        <div class="mobile-actions" style="display:flex;align-items:center;gap:8px;">
+            <button type="button" class="btn btn-secondary btn-sm" id="mobileLangBtn" onclick="toggleLanguage()" style="padding:2px 8px;font-size:0.75rem;">🌐 <span id="mobileLangText">English</span></button>
+            <span class="status-badge status-confirmed" id="mobileBadge">🐾 Owner</span>
+        </div>
+    </div>
+
+    <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+    <main class="main-content">
+        <header class="content-header">
+            <div>
+                <h1 class="page-title" id="page-title">செல்லப்பிராணி & மருத்துவ விவர மேலாண்மை</h1>
+                <p class="page-subtitle" id="page-subtitle">செல்லப்பிராணிகளை பதிவு செய்யவும், மருத்துவ வரலாற்றைக் காணவும், சுயவிவரங்களை நிர்வகிக்கவும்.</p>
+            </div>
+            <div class="header-actions" style="display:flex; align-items:center; gap:12px;">
+                <button type="button" class="btn btn-secondary btn-sm" id="headerLangBtn" onclick="toggleLanguage()" title="Change Language / மொழியை மாற்ற">🌐 <span id="headerLangText">English</span></button>
+                <div id="headerServerStatus" style="font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px; display:inline-flex; align-items:center; gap:6px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-muted);" title="Backend Connection Status">
+                    <span id="headerServerDot" style="width:7px; height:7px; border-radius:50%; background:#10b981; display:inline-block;"></span>
+                    <span id="headerServerStatusText">SQLite Live</span>
+                </div>
+                <button type="button" class="btn btn-primary" id="btnQuickAction" onclick="openBookingModal()" data-i18n="btnBookAppointment">📅 முன்பதிவு செய்ய</button>
+            </div>
+        </header>
+
+        <!-- ══════════════════════════════════════════
+             SECTION 1: STAFF DASHBOARD (FR-05)
+        ══════════════════════════════════════════ -->
+        <section id="dashboard" class="content-section">
+            <div class="stats-grid" id="dashboardStats">
+                <div class="stat-card">
+                    <div class="stat-icon">🐾</div>
+                    <div class="stat-body">
+                        <div class="stat-value" id="statPets">—</div>
+                        <div class="stat-label" data-i18n="statPets">Total Pets Registered</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-body">
+                        <div class="stat-value" id="statPending">—</div>
+                        <div class="stat-label" data-i18n="statPending">Pending Approvals</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-body">
+                        <div class="stat-value" id="statConfirmed">—</div>
+                        <div class="stat-label" data-i18n="statConfirmed">Confirmed Appointments</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-body">
+                        <div class="stat-value" id="statRevenue">—</div>
+                        <div class="stat-label" data-i18n="statRevenue">Total Revenue Collected</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcement Manager (FR-05) -->
+            <div class="card" style="margin-bottom:24px;">
+                <div class="card-header">
+                    <h3 data-i18n="announcementsTitle">📢 Clinic Announcements</h3>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="openPostAnnouncementModal()" data-i18n="postAnnBtn">+ Post Announcement</button>
+                </div>
+                <div id="announcementsList" class="announcements-list">
+                    <div class="loading-placeholder">Loading announcements…</div>
+                </div>
+            </div>
+
+            <!-- Appointment Queue (FR-05) -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 data-i18n="queueTitle">📋 Appointment Approval & Consultation Queue</h3>
+                    <div class="filter-row">
+                        <input type="text" class="form-control form-control-sm" id="dashSearch" placeholder="Search appointments…" oninput="loadDashboardAppointments()">
+                        <select class="form-control form-control-sm" id="dashFilter" onchange="loadDashboardAppointments()">
+                            <option value="all">All Status</option>
+                            <option value="Pending Review">Pending Review</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="dashboardTable">
+                        <thead>
+                            <tr>
+                                <th>Apt #</th>
+                                <th>Pet & Owner</th>
+                                <th>Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardTableBody">
+                            <tr><td colspan="7" class="empty-row">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECTION 2: MY PETS (FR-01)
+        ══════════════════════════════════════════ -->
+        <section id="pets" class="content-section active">
+            <div class="section-toolbar">
+                <div class="filter-row">
+                    <input type="text" class="form-control" id="petSearch" placeholder="🔍 Search pets by name, breed, owner, species…" data-i18n-placeholder="searchPetPlaceholder" oninput="debouncedPetSearch()">
+                    <select class="form-control" id="petSpeciesFilter" onchange="loadPets()">
+                        <option value="" data-i18n="allSpecies">All Species</option>
+                        <option value="Dog">🐶 Dog</option>
+                        <option value="Cat">🐱 Cat</option>
+                        <option value="Rabbit">🐰 Rabbit</option>
+                        <option value="Bird">🦜 Bird</option>
+                        <option value="Cow">🐄 Cow</option>
+                        <option value="Goat">🐐 Goat</option>
+                        <option value="Exotic">🦎 Exotic</option>
+                    </select>
+                </div>
+                <div style="display:flex;gap:8px;">
+                    <a href="register-pet.html" class="btn btn-secondary" data-i18n="btnFullForm">📝 Full Form</a>
+                    <button type="button" class="btn btn-primary" onclick="openRegisterPetModal()" data-i18n="btnRegisterPet">➕ Register New Pet</button>
+                </div>
+            </div>
+
+            <div class="pet-grid" id="petsGrid">
+                <div class="loading-placeholder">Loading pets…</div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECTION 3: BOOK APPOINTMENT (FR-02)
+        ══════════════════════════════════════════ -->
+        <section id="appointments" class="content-section">
+            <h2 style="font-size:1.35rem; margin-bottom:16px;" data-i18n="availDocsTitle">🩺 Available Veterinary Specialists & Time Slots</h2>
+            <div class="doctors-grid" id="doctorsGrid">
+                <div class="loading-placeholder">Loading doctors…</div>
+            </div>
+
+            <div class="card" style="margin-top:28px;">
+                <div class="card-header">
+                    <h3 data-i18n="apptRecordsTitle">📅 Appointment Records</h3>
+                    <div class="filter-row">
+                        <select class="form-control form-control-sm" id="myApptFilter" onchange="loadMyAppointments()">
+                            <option value="all">All Status</option>
+                            <option value="Pending Review">Pending Review</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Apt #</th>
+                                <th>Pet</th>
+                                <th>Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myAppointmentsBody">
+                            <tr><td colspan="7" class="empty-row">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECTION 4: HEALTH RECORDS (FR-03) — Doctor Only
+        ══════════════════════════════════════════ -->
+        <section id="health" class="content-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3>💉 Medical Checkup & Vaccination Records</h3>
+                    <button type="button" class="btn btn-primary" onclick="openHealthLogModal()">➕ Record New Checkup</button>
+                </div>
+                <div class="filter-row" style="padding:0 4px 16px;">
+                    <select class="form-control" id="healthPetFilter" onchange="loadHealthRecords()">
+                        <option value="">All Pets</option>
+                    </select>
+                    <select class="form-control" id="healthStatusFilter" onchange="loadHealthRecords()">
+                        <option value="">All Vaccine Status</option>
+                        <option value="Up to Date">✅ Up to Date</option>
+                        <option value="Due Soon">🟡 Due Soon</option>
+                        <option value="Overdue">🔴 Overdue</option>
+                    </select>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>Checkup Date</th>
+                                <th>Vaccine</th>
+                                <th>Status</th>
+                                <th>Diagnosis</th>
+                                <th>Next Due</th>
+                                <th>Recorded By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="healthRecordsBody">
+                            <tr><td colspan="8" class="empty-row">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECTION 5: BILLING (FR-04)
+        ══════════════════════════════════════════ -->
+        <section id="billing" class="content-section">
+            <!-- Fee Calculator -->
+            <div class="card" style="margin-bottom:24px;">
+                <div class="card-header">
+                    <h3>🧮 Interactive Consultation Fee Calculator</h3>
+                </div>
+                <div class="fee-calculator">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Consultation Fee ($)</label>
+                            <input type="number" id="calcConsult" class="form-control" value="50" min="0" oninput="recalcFees()">
+                        </div>
+                        <div class="form-group">
+                            <label>Treatment Fee ($)</label>
+                            <input type="number" id="calcTreatment" class="form-control" value="20" min="0" oninput="recalcFees()">
+                        </div>
+                        <div class="form-group">
+                            <label>Medication Fee ($)</label>
+                            <input type="number" id="calcMedication" class="form-control" value="25" min="0" oninput="recalcFees()">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Calculated Amount</label>
+                            <div class="total-display" id="calcTotal">$95.00</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+                        <button type="button" class="btn btn-primary" onclick="openCreateInvoiceModal()">💳 Generate Invoice</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>📄 Billing & Invoice Records</h3>
+                    <div class="filter-row">
+                        <input type="text" class="form-control form-control-sm" id="invoiceSearch" placeholder="Search invoices…" oninput="loadInvoices()">
+                        <select class="form-control form-control-sm" id="invoiceStatusFilter" onchange="loadInvoices()">
+                            <option value="all">All Status</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Owner / Pet</th>
+                                <th>Consultation</th>
+                                <th>Treatment</th>
+                                <th>Medication</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceTableBody">
+                            <tr><td colspan="8" class="empty-row">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECTION 6: REPORTS & ANALYTICS
+        ══════════════════════════════════════════ -->
+        <section id="reports" class="content-section">
+            <div class="section-toolbar">
+                <div>
+                    <h2 style="font-size:1.4rem;">📊 Clinic Performance & Medical Analytics</h2>
+                    <p style="color:var(--text-secondary);font-size:0.88rem;">Real-time overview of clinic revenue, appointments, vaccination compliance, and patient volume.</p>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="printClinicReport()">🖨️ Print Report Sheet</button>
+            </div>
+
+            <div class="stats-grid" id="reportsStatsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon">💵</div>
+                    <div class="stat-body">
+                        <div class="stat-value" id="repTotalRev">$0.00</div>
+                        <div class="stat-label">Total Settled Revenue</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-body">
+                        <div class="stat-value" id="repPendingRev">$0.00</div>
+                        <div class="stat-label">Pending Invoices Amount</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-body">
+                        <div class="stat-value" id="repTotalAppts">0</div>
+                        <div class="stat-label">Total Appointments Booked</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🐾</div>
+                    <div class="stat-body">
+                        <div class="stat-value" id="repTotalPets">0</div>
+                        <div class="stat-label">Total Patients in Database</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-grid">
+                <!-- Fee Breakdown -->
+                <div class="card">
+                    <div class="card-header"><h3>💰 Revenue Breakdown by Category</h3></div>
+                    <div class="report-bar-wrap" id="repFeeBars">
+                        <div class="loading-placeholder">Loading fee breakdown…</div>
+                    </div>
+                </div>
+
+                <!-- Vaccination Compliance -->
+                <div class="card">
+                    <div class="card-header"><h3>💉 Vaccination Compliance Status</h3></div>
+                    <div class="report-bar-wrap" id="repVaxBars">
+                        <div class="loading-placeholder">Loading vaccination metrics…</div>
+                    </div>
+                </div>
+
+                <!-- Species Distribution -->
+                <div class="card">
+                    <div class="card-header"><h3>🐶 Patient Species Distribution</h3></div>
+                    <div class="report-bar-wrap" id="repSpeciesBars">
+                        <div class="loading-placeholder">Loading species distribution…</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECTION 7: WELLNESS EVENTS (FR-06)
+        ══════════════════════════════════════════ -->
+        <section id="events" class="content-section">
+            <div class="section-toolbar">
+                <div>
+                    <h2 style="font-size:1.35rem;">🎪 Upcoming Health Camps & Wellness Workshops</h2>
+                    <p style="color:var(--text-secondary);font-size:0.88rem;">Register your pet for free community vaccination camps and nutrition seminars.</p>
+                </div>
+            </div>
+            <div class="events-grid" id="eventsGrid">
+                <div class="loading-placeholder">Loading wellness events…</div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECTION 8: MY PROFILE
+        ══════════════════════════════════════════ -->
+        <section id="profile" class="content-section">
+            <div class="profile-layout">
+                <div class="card profile-card">
+                    <div class="profile-avatar-wrap">
+                        <div class="profile-avatar" id="profileAvatarLetter">A</div>
+                    </div>
+                    <div class="profile-info" id="profileInfo">
+                        <h2 id="profileName">—</h2>
+                        <span class="status-badge status-confirmed" id="profileRoleBadge">Pet Owner</span>
+                        <div class="profile-details">
+                            <div class="profile-detail-row"><span>📧</span><span id="profileEmail">—</span></div>
+                            <div class="profile-detail-row"><span>📱</span><span id="profilePhone">—</span></div>
+                            <div class="profile-detail-row"><span>📍</span><span id="profileAddress">—</span></div>
+                        </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:20px;">
+                        <button type="button" class="btn btn-primary" onclick="openEditProfileModal()" data-i18n="editProfileBtn">✏️ Edit Profile</button>
+                        <button type="button" class="btn btn-secondary" onclick="openChangePasswordModal()" data-i18n="changePassBtn">🔑 Change Password</button>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="performLogout()" data-i18n="signOutBtn">🚪 Sign Out</button>
+                    </div>
+                </div>
+
+                <div class="profile-right">
+                    <div class="card">
+                        <div class="card-header"><h3>📋 Account Activity Summary</h3></div>
+                        <div class="summary-grid">
+                            <div class="summary-item"><div class="summary-val" id="sumPets">—</div><div class="summary-lab">Pets Registered</div></div>
+                            <div class="summary-item"><div class="summary-val" id="sumAppts">—</div><div class="summary-lab">Appointments</div></div>
+                            <div class="summary-item"><div class="summary-val" id="sumPaid">—</div><div class="summary-lab">Paid Invoices</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main><!-- end .main-content -->
+</div><!-- end .app-layout -->
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     GLOBAL MODAL
+════════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="appModalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal-box" id="appModalBox">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Modal</h3>
+            <button type="button" class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer" id="modalFooter"></div>
+    </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toastContainer"></div>
+
+<!-- FLOATING ACTION BUTTON -->
+<button type="button" class="fab" id="fabQuickBook" onclick="openBookingModal()" title="Quick Book">
+    <span class="fab-icon">⚡</span>
+    <span class="fab-text">Book Consultation</span>
+</button>
+
+<script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New Pet — VetCare Animal Health System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+    <style>
+        .register-page-container {
+            max-width: 880px;
+            margin: 40px auto;
+            padding: 0 20px 60px;
+        }
+        .reg-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .reg-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 36px;
+            box-shadow: var(--shadow-md);
+        }
+        .step-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .step-progress::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 15%;
+            right: 15%;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+        .step-item {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .step-number {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            background: var(--bg-hover);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+        .step-item.active .step-number {
+            background: var(--brand-gradient);
+            color: white;
+            border-color: var(--brand-primary);
+            box-shadow: 0 4px 12px rgba(79,70,229,0.3);
+        }
+        .step-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .step-item.active .step-title {
+            color: var(--brand-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-page-container">
+        <!-- Header -->
+        <header class="reg-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div style="font-size:2.2rem;">🐾</div>
+                <div>
+                    <h2 style="font-size:1.4rem;">VetCare</h2>
+                    <p style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Pet Registration Portal</p>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button type="button" class="btn btn-secondary btn-sm" id="themeToggleBtn" onclick="toggleThemeStandalone()">
+                    <span id="themeLabel">🌙 Dark</span>
+                </button>
+                <a href="index.html" class="btn btn-primary btn-sm">← Back to Portal</a>
+            </div>
+        </header>
+
+        <!-- Main Card -->
+        <div class="reg-card">
+            <div style="text-align:center; margin-bottom:28px;">
+                <span class="status-badge status-confirmed">🐾 Official Animal Medical Record</span>
+                <h1 style="font-size:2rem; margin-top:8px;">Register New Animal Patient</h1>
+                <p style="color:var(--text-secondary); font-size:0.92rem; margin-top:4px;">
+                    Fill in the animal's physical characteristics, owner contact information, and initial medical history.
+                </p>
+            </div>
+
+            <!-- Step Indicators -->
+            <div class="step-progress">
+                <div class="step-item active">
+                    <div class="step-number">1</div>
+                    <span class="step-title">Pet Identity</span>
+                </div>
+                <div class="step-item active">
+                    <div class="step-number">2</div>
+                    <span class="step-title">Owner Details</span>
+                </div>
+                <div class="step-item active">
+                    <div class="step-number">3</div>
+                    <span class="step-title">Medical History</span>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="standalonePetForm" onsubmit="submitPetRegistrationPage(event)">
+                <!-- Section 1: Pet Identity -->
+                <h3 style="margin-bottom:14px; color:var(--brand-primary); display:flex; align-items:center; gap:8px;">
+                    🐶 1. Animal Physical Identity
+                </h3>
+
+                <div class="form-grid" style="margin-bottom:20px;">
+                    <div class="form-group">
+                        <label for="regPetName">Pet Name *</label>
+                        <input type="text" id="regPetName" class="form-control" placeholder="e.g. Max" required minlength="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPetBreed">Breed Name</label>
+                        <input type="text" id="regPetBreed" class="form-control" placeholder="e.g. Golden Retriever, Siamese, Mix" value="Golden Retriever">
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Select Animal Species *</label>
+                        <div class="species-chips">
+                            <div class="species-chip selected" onclick="selectSpeciesChip(this, 'Dog')">🐶 Dog</div>
+                            <div class="species-chip" onclick="selectSpeciesChip(this, 'Cat')">🐱 Cat</div>
+                            <div class="species-chip" onclick="selectSpeciesChip(this, 'Rabbit')">🐰 Rabbit</div>
+                            <div class="species-chip" onclick="selectSpeciesChip(this, 'Bird')">🦜 Bird</div>
+                            <div class="species-chip" onclick="selectSpeciesChip(this, 'Cow')">🐄 Cow</div>
+                            <div class="species-chip" onclick="selectSpeciesChip(this, 'Goat')">🐐 Goat</div>
+                            <div class="species-chip" onclick="selectSpeciesChip(this, 'Horse')">🐎 Horse</div>
+                            <div class="species-chip" onclick="selectSpeciesChip(this, 'Exotic')">🦎 Exotic</div>
+                        </div>
+                        <input type="hidden" id="selectedRegSpecies" value="Dog">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPetAge">Age (Years) *</label>
+                        <input type="number" id="regPetAge" class="form-control" min="0" max="40" value="2" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regGender">Gender</label>
+                        <select id="regGender" class="form-control">
+                            <option value="Male">Male ♂️</option>
+                            <option value="Female">Female ♀️</option>
+                            <option value="Unknown">Unknown</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regWeight">Current Weight</label>
+                        <input type="text" id="regWeight" class="form-control" placeholder="e.g. 15 kg" value="12 kg">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regStatus">Initial Health Status</label>
+                        <select id="regStatus" class="form-control">
+                            <option value="Healthy 🟢">Healthy 🟢</option>
+                            <option value="Booster Due 🟡">Booster Due 🟡</option>
+                            <option value="Vaccination Overdue 🔴">Vaccination Overdue 🔴</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr style="border:none; border-top:1px solid var(--border-color); margin:24px 0;">
+
+                <!-- Section 2: Owner Contact Details -->
+                <h3 style="margin-bottom:14px; color:var(--brand-primary); display:flex; align-items:center; gap:8px;">
+                    👤 2. Owner Contact Information
+                </h3>
+
+                <div class="form-grid" style="margin-bottom:20px;">
+                    <div class="form-group">
+                        <label for="regOwnerName">Owner Full Name *</label>
+                        <input type="text" id="regOwnerName" class="form-control" placeholder="e.g. Alice Johnson" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regOwnerPhone">Contact Phone Number</label>
+                        <input type="tel" id="regOwnerPhone" class="form-control" placeholder="+1 (555) 234-5678">
+                    </div>
+                </div>
+
+                <hr style="border:none; border-top:1px solid var(--border-color); margin:24px 0;">
+
+                <!-- Section 3: Medical Background -->
+                <h3 style="margin-bottom:14px; color:var(--brand-primary); display:flex; align-items:center; gap:8px;">
+                    🩺 3. Medical Background & Vaccination History
+                </h3>
+
+                <div class="form-group">
+                    <label for="regHistory">Known Surgeries, Allergies or Dietary Notes</label>
+                    <textarea id="regHistory" class="form-control" rows="3" placeholder="Mention previous vaccinations, allergies, chronic conditions, dietary needs…"></textarea>
+                </div>
+
+                <!-- Submit Button Bar -->
+                <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:28px;">
+                    <a href="index.html" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="btnSubmitPet">
+                        ✨ Complete Pet Registration
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer"></div>
+
+    <script>
+        const API = (() => {
+            if (typeof window !== 'undefined' && window.location.protocol.startsWith('http')) {
+                const port = window.location.port;
+                const devServerPorts = ['5500', '5501', '5502', '3000', '5173', '8080'];
+                if (devServerPorts.includes(port)) {
+                    return 'http://127.0.0.1:8000/api';
+                }
+                return window.location.origin + '/api';
+            }
+            return 'http://127.0.0.1:8000/api';
+        })();
+
+        // Pre-fill owner name from localStorage if logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('vetcare_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeLabel').textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+
+            const user = JSON.parse(localStorage.getItem('vetcare_user') || 'null');
+            if (user) {
+                document.getElementById('regOwnerName').value = user.name || '';
+                if (user.phone) document.getElementById('regOwnerPhone').value = user.phone;
+            }
+        });
+
+        function selectSpeciesChip(chipEl, species) {
+            document.querySelectorAll('.species-chip').forEach(c => c.classList.remove('selected'));
+            chipEl.classList.add('selected');
+            document.getElementById('selectedRegSpecies').value = species;
+        }
+
+        function toggleThemeStandalone() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('vetcare_theme', next);
+            document.getElementById('themeLabel').textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+        }
+
+        async function submitPetRegistrationPage(event) {
+            event.preventDefault();
+            const btn = document.getElementById('btnSubmitPet');
+            btn.textContent = 'Saving…';
+            btn.disabled = true;
+
+            const name = document.getElementById('regPetName').value.trim();
+            const owner_name = document.getElementById('regOwnerName').value.trim();
+            const species = document.getElementById('selectedRegSpecies').value;
+            const breed = document.getElementById('regPetBreed').value.trim() || 'Mix';
+            const age = document.getElementById('regPetAge').value || '1';
+            const gender = document.getElementById('regGender').value;
+            const weight = document.getElementById('regWeight').value.trim();
+            const status = document.getElementById('regStatus').value;
+            const medical_history = document.getElementById('regHistory').value.trim();
+
+            const user = JSON.parse(localStorage.getItem('vetcare_user') || 'null');
+            const owner_id = user?.id || 3;
+
+            if (!name || !owner_name) {
+                showToast('Please enter Pet Name and Owner Name!', 'warning');
+                btn.textContent = '✨ Complete Pet Registration';
+                btn.disabled = false;
+                return;
+            }
+
+            const petData = {
+                name,
+                species,
+                breed,
+                age,
+                gender,
+                weight,
+                status,
+                medical_history,
+                owner_id,
+                owner_name
+            };
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+                const res = await fetch(API + '/pets', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(petData),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({ detail: 'Failed to register pet.' }));
+                    throw new Error(err.detail || 'Failed to register pet.');
+                }
+
+                showToast(`🎉 ${name} (${species}) registered successfully! Redirecting…`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1200);
+            } catch (err) {
+                // Fallback to local storage mock store if server is offline
+                const mockPets = JSON.parse(localStorage.getItem('vetcare_mock_pets') || '[]');
+                const newId = mockPets.length ? Math.max(...mockPets.map(p => p.id)) + 1 : 1;
+                mockPets.unshift({ id: newId, ...petData });
+                localStorage.setItem('vetcare_mock_pets', JSON.stringify(mockPets));
+
+                showToast(`🎉 ${name} (${species}) registered successfully! (Demo Mode) Redirecting…`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1200);
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const icon = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' }[type] || 'ℹ️';
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('show'));
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
