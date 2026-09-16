@@ -7,19 +7,7 @@
 // ════════════════════════════════════════════════════════════
 
 // Intelligent API URL resolution:
-// When run directly from FastAPI backend (port 8000 or production origin), use window.location.origin.
-// When run via Live Server (port 5500, 3000, 5173, etc.) or file://, target backend at http://127.0.0.1:8000/api.
-const API = (() => {
-    if (typeof window !== 'undefined' && window.location.protocol.startsWith('http')) {
-        const port = window.location.port;
-        const devServerPorts = ['5500', '5501', '5502', '3000', '5173', '8080'];
-        if (devServerPorts.includes(port)) {
-            return 'http://127.0.0.1:8000/api';
-        }
-        return window.location.origin + '/api';
-    }
-    return 'http://127.0.0.1:8000/api';
-})();
+const API = '/api';
 
 // ─── Global State ──────────────────────────────────────────
 let currentUser = JSON.parse(localStorage.getItem('vetcare_user') || 'null');
